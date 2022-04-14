@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Quiz</title>
+</head>
+<body>
+    <div id="helloPage" align="center">
+        <h1>Добро пожаловать в игру Quiz</h1>
+        <p>Кол-во вопросов:</p>
+        <form name="newGame" method="post">
+            <input name="numberOfQuestions" id="numberOfQuestions" type="number" required min="1" />
+            <p><input type="submit" value="Запустить игру" /></p>
+        </form>
+
+        <p>Вернуться в игру</p>
+        <form id="restoreGame" name="restoreGame" method="get">
+            <input name="GameId" id="GameId" type="number" required min="1" />
+            <p><input type="submit" value="Вернуться в игру" /></p>
+            <p name = "answer" id="answer"></p>
+        </form>
+    </div>
+
+    <script>
+        document.forms["restoreGame"].addEventListener("submit", e => {
+            e.preventDefault();
+            const form = document.forms["restoreGame"];
+            const GameId = form.elements["GameId"].value;
+            FindGame(GameId);
+        });
+
+        async function FindGame(GameId) {
+            const response = await fetch("/api/Quiz/" + GameId, {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                const GameSession = await response.json();
+                const form = document.forms["restoreGame"];
+                console.log(GameSession);
+            }
+            else
+            {
+                console.log("Данные отстутсвтуют или произошла ошибка");
+            }
+        }
+    </script>
+</body>
+</html>
